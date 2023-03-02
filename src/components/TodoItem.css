@@ -18,6 +18,18 @@
   font-size: 16px;
 }
 
+.TodoItem .CheckBox {
+  width: 32px;
+  height: 32px;
+  border-radius: 16px;
+  border: 1px solid rgb(206, 212, 218);
+}
+
+.TodoItem .TodoText {
+  border: none;
+  background: transparent;
+}
+
 .TodoItem input[type="checkbox"] {
   margin-right: 10px;
 }

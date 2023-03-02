@@ -1,86 +1,86 @@
-import React, { useState, useEffect } from 'react';
-import TodoForm from './components/TodoForm';
-import TodoList from './components/TodoList';
-import './App.css';
+import React, { useState } from 'react';
 
 function App() {
-  const [todos, setTodos] = useState<any>([]);
-  const [filter, setFilter] = useState('all');
-  const [sort, setSort] = useState('asc');
+  const [todos, setTodos] = useState([]);
+  const [inputValue, setInputValue] = useState('');
 
-  const LOCAL_STORAGE_KEY = "todo-list";
-
-  useEffect(() => {
-    const storageTodos = JSON.parse(localStorage.getItem(LOCAL_STORAGE_KEY));
-    if (storageTodos) {
-      setTodos(storageTodos);
-    }
-  }, []);
-
-  useEffect(() => {
-    localStorage.setItem(LOCAL_STORAGE_KEY, JSON.stringify(todos));
-  }, [todos]);
-
-  const addTodo = (todo) => {
-    setTodos([...todos, todo]);
+  const handleInputChange = (e) => {
+    setInputValue(e.target.value);
   };
 
-  const deleteTodo = (id) => {
-    const newTodos = todos.filter((todo) => todo.id !== id);
+  const handleAddTodo = () => {
+    if (!inputValue.trim()) {
+      return;
+    }
+
+    const newTodo = {
+      id: Date.now(),
+      text: inputValue,
+      completed: false,
+      createdAt: new Date(),
+    };
+
+    setTodos([...todos, newTodo]);
+    setInputValue('');
+  };
+
+  const handleToggleCompleted = (id) => {
+    const newTodos = todos.map((todo) => {
+      if (todo.id === id) {
+        return {
+          ...todo,
+          completed: !todo.completed,
+        };
+      }
+
+      return todo;
+    });
+
     setTodos(newTodos);
   };
 
-  const updateTodo = (id, updatedTodo) => {
-    const newTodos = [...todos];
-    const index = newTodos.findIndex((todo) => todo.id === id);
-    newTodos[index] = updatedTodo;
-    setTodos(newTodos);
-  };
-
-  const toggleTodo = (id) => {
-    const newTodos = [...todos];
-    const index = newTodos.findIndex((todo) => todo.id === id);
-    newTodos[index].completed = !newTodos[index].completed;
-    setTodos(newTodos);
-  };
-
-  const filterTodos = () => {
-    switch (filter) {
-      case 'completed':
-        return todos.filter((todo) => todo.completed);
-      case 'active':
-        return todos.filter((todo) => !todo.completed);
-      default:
-        return todos;
+  const sortTodos = (a, b) => {
+    if (a.completed && !b.completed) {
+      return 1;
     }
+
+    if (!a.completed && b.completed) {
+      return -1;
+    }
+
+    return b.createdAt.getTime() - a.createdAt.getTime();
   };
 
-  const sortTodos = (todos) => {
-    switch (sort) {
-      case 'asc':
-        return todos.sort((a, b) => a.date - b.date);
-      case 'desc':
-        return todos.sort((a, b) => b.date - a.date);
-      default:
-        return todos;
-    }
-  }; 
-  
-  const filteredTodos = filterTodos();
-  const sortedTodos = sortTodos(filteredTodos);
+  const sortedTodos = todos.slice().sort(sortTodos);
 
   return (
-    <div className="App">
-      <h1>할 일 리스트</h1>
-      <TodoForm addTodo={addTodo} />
-      <TodoList
-        todos={sortedTodos}
-        deleteTodo={deleteTodo}
-        updateTodo={updateTodo}
-        toggleTodo={toggleTodo}
-        setFilter={setFilter}
-        setSort={setSort}
-      />
+    <div>
+      <h1>Todo List</h1>
+      <div>
+        <input
+          type="text"
+          value={inputValue}
+          onChange={handleInputChange}
+          placeholder="Add a new todo"
+        />
+        <button onClick={handleAddTodo}>Add</button>
+      </div>
+      <ul>
+        {sortedTodos.map((todo) => (
+          <li key={todo.id}>
+            <input
+              type="checkbox"
+              checked={todo.completed}
+              onChange={() => handleToggleCompleted(todo.id)}
+            />
+            <span
+              style={{ textDecoration: todo.completed ? 'line-through' : 'none' }}
+            >
+              {todo.text}
+            </span>
+          </li>
+        ))}
+      </ul>
     </div>
   );
 }

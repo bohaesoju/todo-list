@@ -12,16 +12,15 @@ function TodoItem({ todo, deleteTodo, updateTodo, toggleTodo }) {
   };
 
   const handleTodoTextChange = (event) => {
-    console.log('event', event)
     const updatedTodo = { ...todo, text: event.target.value };
     updateTodo(todo.id, updatedTodo);
   };
 
   const getKoreaStandardTime = (timeStamp): any => {
     const KoreaStandardTimeOffset = 9 * 60 * 60 * 1000;
-    const KoreaStandardTimeStamp = new Date(timeStamp + KoreaStandardTimeOffset); // KST timestamp
+    const KoreaStandardTimeStamp = new Date(timeStamp + KoreaStandardTimeOffset);
     const year = KoreaStandardTimeStamp.getFullYear();
-    const month = String(KoreaStandardTimeStamp.getMonth() + 1).padStart(2, '0'); // January is 0
+    const month = String(KoreaStandardTimeStamp.getMonth() + 1).padStart(2, '0');
     const day = String(KoreaStandardTimeStamp.getDate()).padStart(2, '0');
     const hours = String(KoreaStandardTimeStamp.getHours()).padStart(2, '0');
     const minutes = String(KoreaStandardTimeStamp.getMinutes()).padStart(2, '0');
@@ -32,8 +31,8 @@ function TodoItem({ todo, deleteTodo, updateTodo, toggleTodo }) {
   return (
     <li className={`TodoItem ${todo.completed ? 'completed' : ''}`}>
       <label>
-        <input type="checkbox" checked={todo.completed} onChange={handleCheckboxChange} />
-        <input type="text" onChange={handleTodoTextChange} value={todo.text} />
+        <input type="checkbox" className='CheckBox' checked={todo.completed} onChange={handleCheckboxChange} />
+        <input type="text" className='TodoText' onChange={handleTodoTextChange} value={todo.text} />
         <span className='date'>{getKoreaStandardTime(todo.date)}</span>
       </label>
       <button onClick={handleDeleteClick}>Delete</button>

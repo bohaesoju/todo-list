@@ -24,8 +24,7 @@ function TodoForm({ addTodo }) {
 
   return (
     <form onSubmit={handleSubmit}>
-      <input type="text" value={newTodo} onChange={handleInputChange} placeholder="Add a new to-do..." />
-      <button type="submit">Add</button>
+      <input type="text" value={newTodo} onChange={handleInputChange} placeholder="이곳에 할 일을 입력해주세요" />
     </form>
   );
 }

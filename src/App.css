@@ -21,8 +21,9 @@ form input[type="text"] {
   padding: 5px;
   border-radius: 5px;
   border: none;
-  margin-right: 10px;
   font-size: 16px;
+  max-width: 600px;
+  margin: 0 auto;
 }
 
 form button {
