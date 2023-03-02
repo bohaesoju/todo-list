@@ -1,0 +1,24 @@
+.TodoList {
+  max-width: 600px;
+  margin: 0 auto;
+}
+
+.TodoList ul {
+  list-style: none;
+  padding: 0;
+}
+
+.filters {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 10px;
+}
+
+.filters select {
+  padding: 5px;
+  border-radius: 5px;
+  border: none;
+  background-color: #f2f2f2;
+  font-size: 16px;
+  cursor: pointer;
+}
