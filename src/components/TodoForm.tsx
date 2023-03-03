@@ -12,10 +12,9 @@ function TodoForm({ addTodo }) {
     event.preventDefault();
     if (newTodo.trim() !== '') {
       const todo = {
-        id: uuidv4(),
-        text: newTodo,
-        completed: false,
-        date: Date.now(),
+        text: newTodo, 
+        completed: false, 
+        id: Date.now()
       };
       addTodo(todo);
       setNewTodo('');
@@ -24,7 +23,8 @@ function TodoForm({ addTodo }) {
 
   return (
     <form onSubmit={handleSubmit}>
-      <input type="text" value={newTodo} onChange={handleInputChange} placeholder="이곳에 할 일을 입력해주세요" />
+      <input type="text" value={newTodo} onChange={handleInputChange} placeholder="Add a new to-do..." />
+      <button type="submit">Add</button>
     </form>
   );
 }

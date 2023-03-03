@@ -1,88 +1,69 @@
 import React, { useState } from 'react';
+import TodoForm from './components/TodoForm';
+import './App.css';
+// import TodoItem from './TodoItem';
 
-function App() {
+function TodoList() {
   const [todos, setTodos] = useState([]);
-  const [inputValue, setInputValue] = useState('');
+  const [filter, setFilter] = useState('all');
 
-  const handleInputChange = (e) => {
-    setInputValue(e.target.value);
+  const addTodo = (todo) => {
+    setTodos([...todos, todo]);
   };
 
-  const handleAddTodo = () => {
-    if (!inputValue.trim()) {
-      return;
+  const toggleTodo = (id) => {
+    setTodos(
+      todos.map((todo) => {
+        if (todo.id === id) {
+          return { ...todo, completed: !todo.completed };
+        }
+        return todo;
+      })
+    );
+  };
+
+  const deleteTodo = (id) => {
+    setTodos(todos.filter((todo) => todo.id !== id));
+  };
+
+  const filteredTodos = todos.filter((todo) => {
+    if (filter === 'all') return true;
+    if (filter === 'completed') return todo.completed;
+    if (filter === 'active') return !todo.completed;
+    return false;
+  });
+
+  const sortedTodos = [...filteredTodos].sort((a, b) => {
+    if (a.completed !== b.completed) {
+      return a.completed ? 1 : -1;
     }
-
-    const newTodo = {
-      id: Date.now(),
-      text: inputValue,
-      completed: false,
-      createdAt: new Date(),
-    };
-
-    setTodos([...todos, newTodo]);
-    setInputValue('');
-  };
-
-  const handleToggleCompleted = (id) => {
-    const newTodos = todos.map((todo) => {
-      if (todo.id === id) {
-        return {
-          ...todo,
-          completed: !todo.completed,
-        };
-      }
-
-      return todo;
-    });
-
-    setTodos(newTodos);
-  };
-
-  const sortTodos = (a, b) => {
-    if (a.completed && !b.completed) {
-      return 1;
-    }
-
-    if (!a.completed && b.completed) {
-      return -1;
-    }
-
-    return b.createdAt.getTime() - a.createdAt.getTime();
-  };
-
-  const sortedTodos = todos.slice().sort(sortTodos);
+    return b.id - a.id;
+  });
 
   return (
-    <div>
-      <h1>Todo List</h1>
+    <div className='App'>
+      <h1>Todo-List</h1>
+      <TodoForm addTodo={addTodo} />
       <div>
-        <input
-          type="text"
-          value={inputValue}
-          onChange={handleInputChange}
-          placeholder="Add a new todo"
-        />
-        <button onClick={handleAddTodo}>Add</button>
+        <button onClick={() => setFilter('all')}>All</button>
+        <button onClick={() => setFilter('active')}>Active</button>
+        <button onClick={() => setFilter('completed')}>Completed</button>
       </div>
       <ul>
         {sortedTodos.map((todo) => (
-          <li key={todo.id}>
-            <input
-              type="checkbox"
-              checked={todo.completed}
-              onChange={() => handleToggleCompleted(todo.id)}
-            />
-            <span
-              style={{ textDecoration: todo.completed ? 'line-through' : 'none' }}
-            >
-              {todo.text}
-            </span>
-          </li>
+          <li>
+          <input
+            type="checkbox"
+            checked={todo.completed}
+            onChange={() => toggleTodo(todo.id)}
+          />
+          {todo.text}
+          <button onClick={() => deleteTodo(todo.id)}>Delete</button>
+        </li>
         ))}
       </ul>
     </div>
   );
 }
 
-export default App;
+export default TodoList;

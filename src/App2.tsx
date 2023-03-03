@@ -34,8 +34,7 @@ function App() {
     const newTodos = [...todos];
     const index = newTodos.findIndex((todo) => todo.id === id);
     newTodos[index] = updatedTodo;
-    console.log('newTodos', newTodos)
-    sortTodoAllList(newTodos)
+    handleSortByCompletion(newTodos)
     setTodos(newTodos);
   };
 
@@ -68,9 +67,16 @@ function App() {
     }
   };
 
-  const sortTodoAllList = (todos) => {
-    console.log('sortTodoAllList', todos)
-  }; 
+  const handleSortByCompletion = (todos) => {
+    const newTodos = [...todos];
+    newTodos.sort((a, b) => {
+      if (a.completed === b.completed) {
+        return b.date - a.date;
+      }
+      return a.completed ? 1 : -1;
+    });
+    setTodos(newTodos);
+  };
   
   const filteredTodos = filterTodos();
   const sortedTodos = sortTodos(filteredTodos);
