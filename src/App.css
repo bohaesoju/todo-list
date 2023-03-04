@@ -45,3 +45,7 @@ form button:hover {
   margin-top: 20px;
   color: #888;
 }
+
+.App ul {
+  padding: 0;
+}

@@ -1,22 +1,32 @@
-import React, { useState } from 'react';
+import { useState, useEffect } from 'react';
 import TodoForm from './components/TodoForm';
+import TodoItem from './components/TodoItem';
 import './App.css';
-// import TodoItem from './TodoItem';
 
-function TodoList() {
-  const [todos, setTodos] = useState([]);
+function App() {
+  const storedTodos = JSON.parse(localStorage.getItem('todos') || '[]');
+  const [todos, setTodos] = useState(storedTodos);
   const [filter, setFilter] = useState('all');
+
+  useEffect(() => {
+    localStorage.setItem('todos', JSON.stringify(todos));
+  }, [todos]);
 
   const addTodo = (todo) => {
     setTodos([...todos, todo]);
   };
 
+  const updateTodo = (id, updatedTodo) => {
+    const newTodos = [...todos];
+    const index = newTodos.findIndex((todo) => todo.id === id);
+    newTodos[index] = updatedTodo;
+    setTodos(newTodos);
+  };
+
   const toggleTodo = (id) => {
     setTodos(
       todos.map((todo) => {
-        if (todo.id === id) {
-          return { ...todo, completed: !todo.completed };
-        }
+        if (todo.id === id) return { ...todo, completed: !todo.completed };
         return todo;
       })
     );
@@ -33,12 +43,15 @@ function TodoList() {
     return false;
   });
 
-  const sortedTodos = [...filteredTodos].sort((a, b) => {
-    if (a.completed !== b.completed) {
-      return a.completed ? 1 : -1;
-    }
-    return b.id - a.id;
-  });
+  const getSortedTodos = () => {
+    const newFilteredTodos = [...filteredTodos]
+    return newFilteredTodos.sort((a, b) => {
+      if (a.completed !== b.completed) return a.completed ? 1 : -1;
+      return b.id - a.id;
+    })
+  }
+  
+  const sortedTodos = getSortedTodos();
 
   return (
     <div className='App'>
@@ -51,19 +64,11 @@ function TodoList() {
       </div>
       <ul>
         {sortedTodos.map((todo) => (
-          <li>
-          <input
-            type="checkbox"
-            checked={todo.completed}
-            onChange={() => toggleTodo(todo.id)}
-          />
-          {todo.text}
-          <button onClick={() => deleteTodo(todo.id)}>Delete</button>
-        </li>
+          <TodoItem key={todo.id} toggleTodo={toggleTodo} todo={todo} deleteTodo={deleteTodo} updateTodo={updateTodo} />
         ))}
       </ul>
     </div>
   );
 }
 
-export default TodoList;
+export default App;

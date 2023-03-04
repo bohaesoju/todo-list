@@ -27,9 +27,9 @@ function TodoList({ todos, deleteTodo, updateTodo, toggleTodo, setFilter, setSor
         </select>
       </div>
       <ul>
-        {todos.map((todo) => (
+        {/* {todos.map((todo) => (
           <TodoItem key={todo.id} todo={todo} deleteTodo={deleteTodo} updateTodo={updateTodo} toggleTodo={toggleTodo} />
-        ))}
+        ))} */}
       </ul>
     </div>
   );

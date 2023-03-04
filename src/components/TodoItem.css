@@ -28,6 +28,7 @@
 .TodoItem .TodoText {
   border: none;
   background: transparent;
+  padding: 10px 0;
 }
 
 .TodoItem input[type="checkbox"] {

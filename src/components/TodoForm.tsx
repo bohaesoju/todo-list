@@ -1,5 +1,5 @@
-import React, { useState } from 'react';
-import { v4 as uuidv4 } from 'uuid';
+import { useState } from 'react';
+import crypto from "crypto-js";
 
 function TodoForm({ addTodo }) {
   const [newTodo, setNewTodo] = useState('');
@@ -10,9 +10,10 @@ function TodoForm({ addTodo }) {
 
   const handleSubmit = (event) => {
     event.preventDefault();
+    // const encryptTodoText = crypto.AES.encrypt(JSON.stringify(newTodo), "todo-list-secret-key").toString()
     if (newTodo.trim() !== '') {
       const todo = {
-        text: newTodo, 
+        text: newTodo,
         completed: false, 
         id: Date.now()
       };
@@ -23,8 +24,7 @@ function TodoForm({ addTodo }) {
 
   return (
     <form onSubmit={handleSubmit}>
-      <input type="text" value={newTodo} onChange={handleInputChange} placeholder="Add a new to-do..." />
-      <button type="submit">Add</button>
+      <input type="text" value={newTodo} onChange={handleInputChange} placeholder="이 곳에 할 일을 입력하고 엔터를 눌러주세요" />
     </form>
   );
 }

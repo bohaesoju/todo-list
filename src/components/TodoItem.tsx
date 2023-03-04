@@ -1,14 +1,12 @@
-import React from 'react';
 import './TodoItem.css';
 
-function TodoItem({ todo, deleteTodo, updateTodo, toggleTodo }) {
+function TodoItem({ todo, deleteTodo, toggleTodo, updateTodo }) {
   const handleDeleteClick = () => {
     deleteTodo(todo.id);
   };
 
   const handleCheckboxChange = () => {
-    const updatedTodo = { ...todo, completed: !todo.completed };
-    updateTodo(todo.id, updatedTodo);
+    toggleTodo(todo.id)
   };
 
   const handleTodoTextChange = (event) => {
@@ -31,10 +29,15 @@ function TodoItem({ todo, deleteTodo, updateTodo, toggleTodo }) {
   return (
     <li className={`TodoItem ${todo.completed ? 'completed' : ''}`}>
       <label>
-        <input type="checkbox" className='CheckBox' checked={todo.completed} onChange={handleCheckboxChange} />
-        <input type="text" className='TodoText' onChange={handleTodoTextChange} value={todo.text} />
-        <span className='date'>{getKoreaStandardTime(todo.date)}</span>
+        <input
+          type="checkbox"
+          className='CheckBox'
+          checked={todo.completed}
+          onChange={handleCheckboxChange}
+        />
       </label>
+      <input type="text" className='TodoText' onChange={handleTodoTextChange} value={todo.text} />
+      <span className='date'>{getKoreaStandardTime(todo.id)}</span>
       <button onClick={handleDeleteClick}>Delete</button>
     </li>
   );
