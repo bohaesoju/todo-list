@@ -1,14 +1,19 @@
 import { useState } from 'react';
-import crypto from "crypto-js";
+import { TodoProps } from '../App';
+// import crypto from "crypto-js";
 
-function TodoForm({ addTodo }) {
+interface TodoFormProps {
+	onAddTodo: (todo: TodoProps) => void
+}
+
+function TodoForm({ onAddTodo }: TodoFormProps) {
   const [newTodo, setNewTodo] = useState('');
 
-  const handleInputChange = (event) => {
+  const handleTodoChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     setNewTodo(event.target.value);
   };
 
-  const handleSubmit = (event) => {
+  const handleAddTodoSubmit = (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
     // const encryptTodoText = crypto.AES.encrypt(JSON.stringify(newTodo), "todo-list-secret-key").toString()
     if (newTodo.trim() !== '') {
@@ -17,14 +22,14 @@ function TodoForm({ addTodo }) {
         completed: false, 
         id: Date.now()
       };
-      addTodo(todo);
+      onAddTodo(todo);
       setNewTodo('');
     }
   };
 
   return (
-    <form onSubmit={handleSubmit}>
-      <input type="text" value={newTodo} onChange={handleInputChange} placeholder="이 곳에 할 일을 입력하고 엔터를 눌러주세요" />
+    <form onSubmit={handleAddTodoSubmit}>
+      <input type="text" value={newTodo} onChange={handleTodoChange} placeholder="이 곳에 할 일을 입력하고 엔터를 눌러주세요" />
     </form>
   );
 }

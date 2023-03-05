@@ -1,20 +1,28 @@
+import { TodoProps } from '../App';
 import './TodoItem.css';
 
-function TodoItem({ todo, deleteTodo, toggleTodo, updateTodo }) {
-  const handleDeleteClick = () => {
-    deleteTodo(todo.id);
+interface TodoItemProps {
+  todo: TodoProps
+  onToggleTodo: (id: number) => void
+  onUpdateTodo: (id: number, todo: TodoProps) => void
+  onDeleteTodo: (id: number) => void
+}
+
+function TodoItem({ todo, onToggleTodo, onUpdateTodo, onDeleteTodo }: TodoItemProps) {
+  const handleDeleteTodoClick = () => {
+    onDeleteTodo(todo.id);
   };
 
-  const handleCheckboxChange = () => {
-    toggleTodo(todo.id)
+  const handleToggleChange = () => {
+    onToggleTodo(todo.id)
   };
 
-  const handleTodoTextChange = (event) => {
+  const handleUpdateTodoChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const updatedTodo = { ...todo, text: event.target.value };
-    updateTodo(todo.id, updatedTodo);
+    onUpdateTodo(todo.id, updatedTodo);
   };
 
-  const getKoreaStandardTime = (timeStamp): any => {
+  const getKoreaStandardTime = (timeStamp: number): string => {
     const KoreaStandardTimeOffset = 9 * 60 * 60 * 1000;
     const KoreaStandardTimeStamp = new Date(timeStamp + KoreaStandardTimeOffset);
     const year = KoreaStandardTimeStamp.getFullYear();
@@ -28,17 +36,15 @@ function TodoItem({ todo, deleteTodo, toggleTodo, updateTodo }) {
 
   return (
     <li className={`TodoItem ${todo.completed ? 'completed' : ''}`}>
-      <label>
-        <input
-          type="checkbox"
-          className='CheckBox'
-          checked={todo.completed}
-          onChange={handleCheckboxChange}
-        />
-      </label>
-      <input type="text" className='TodoText' onChange={handleTodoTextChange} value={todo.text} />
+      <input
+        type="checkbox"
+        className='CheckBox'
+        checked={todo.completed}
+        onChange={handleToggleChange}
+      />
+      <input type="text" className='TodoText' onChange={handleUpdateTodoChange} value={todo.text} />
       <span className='date'>{getKoreaStandardTime(todo.id)}</span>
-      <button onClick={handleDeleteClick}>Delete</button>
+      <button className='Trash' onClick={handleDeleteTodoClick}></button>
     </li>
   );
 }

@@ -7,15 +7,8 @@
   justify-content: space-between;
   align-items: center;
   padding: 10px;
-  margin-bottom: 10px;
-  background-color: #f2f2f2;
   border-radius: 5px;
-}
-
-.TodoItem label {
-  display: flex;
-  align-items: center;
-  font-size: 16px;
+  border-bottom: 1px solid #ededed;
 }
 
 .TodoItem .CheckBox {
@@ -25,24 +18,94 @@
   border: 1px solid rgb(206, 212, 218);
 }
 
+input[type="checkbox"] {
+  -webkit-appearance: none;
+  appearance: none;
+  margin: 0;
+  font: inherit;
+  color: currentColor;
+  width: 1.15em;
+  height: 1.15em;
+  border: 0.15em solid currentColor;
+  border-radius: 0.15em;
+  transform: translateY(-0.075em);
+  display: grid;
+  place-content: center;
+}
+
+input[type="checkbox"]::before {
+  content: "";
+  width: 0.65em;
+  height: 0.65em;
+  clip-path: polygon(14% 44%, 0 65%, 50% 100%, 100% 16%, 80% 0%, 43% 62%);
+  transform: scale(0);
+  transform-origin: bottom left;
+  transition: 120ms transform ease-in-out;
+  box-shadow: inset 1em 1em var(--form-control-color);
+  background-color: CanvasText;
+}
+
+input[type="checkbox"]:checked::before {
+  transform: scale(1);
+}
+
+input[type="checkbox"]:focus {
+  outline: max(2px, 0.15em) solid currentColor;
+  outline-offset: max(2px, 0.15em);
+}
+
 .TodoItem .TodoText {
   border: none;
   background: transparent;
   padding: 10px 0;
+  font-size: 16px;
 }
 
 .TodoItem input[type="checkbox"] {
   margin-right: 10px;
 }
   
-.TodoItem button {
-  background-color: #ff7f50;
-  color: white;
-  border: none;
-  border-radius: 5px;
-  padding: 5px 10px;
-  font-size: 16px;
-  cursor: pointer;
+.TodoItem .Trash {
+  padding: 0;
+  box-sizing: border-box;
+  position: relative;
+  display: block;
+  transform: scale(var(--ggs,1));
+  width: 10px;
+  height: 12px;
+  border: 2px solid transparent;
+  box-shadow:
+      0 0 0 2px,
+      inset -2px 0 0,
+      inset 2px 0 0;
+  border-bottom-left-radius: 1px;
+  border-bottom-right-radius: 1px;
+  margin-top: 4px
+}
+.Trash::after,
+.Trash::before {
+  content: "";
+  display: block;
+  box-sizing: border-box;
+  position: absolute
+}
+.Trash::after {
+  background: currentColor;
+  border-radius: 3px;
+  width: 16px;
+  height: 2px;
+  top: -4px;
+  left: -5px
+}
+.Trash::before {
+  width: 10px;
+  height: 4px;
+  border: 2px solid;
+  border-bottom: transparent;
+  border-top-left-radius: 2px;
+  border-top-right-radius: 2px;
+  top: -7px;
+  left: -2px
 }
 
 .TodoItem button:hover {
@@ -51,5 +114,6 @@
 
 .date {
   font-size: 14px;
-  margin-left: 5px;
+  letter-spacing: -1px;
+  padding-right: 5px;
 }

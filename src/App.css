@@ -1,19 +1,33 @@
 .App {
   max-width: 800px;
   margin: 0 auto;
-  padding: 20px;
+  padding: 0px;
   font-family: sans-serif;
   text-align: center;
 }
 
+.App .TodoWrap {
+  box-shadow: 0 2px 4px 0 rgb(0 0 0 / 20%), 0 25px 50px 0 rgb(0 0 0 / 10%);
+  padding-top: 10px;
+}
+
+.explain {
+  font-size: 14px;
+  color: #777;
+  padding: 0 20px;
+  text-align: left;
+}
+
 h1 {
-  font-size: 36px;
-  margin-bottom: 20px;
+  font-size: 50px;
+  margin: 0 0 20px;
+  color:rgba(175, 47, 47, 0.15);
 }
 
 form {
   display: flex;
-  margin-bottom: 20px;
+  margin-bottom: 10px;
+  padding:0 30px
 }
 
 form input[type="text"] {
@@ -24,6 +38,7 @@ form input[type="text"] {
   font-size: 16px;
   max-width: 600px;
   margin: 0 auto;
+  text-align: center;
 }
 
 form button {
@@ -40,10 +55,18 @@ form button:hover {
   background-color: #3e8e41;
 }
 
-.App p {
-  font-size: 20px;
-  margin-top: 20px;
-  color: #888;
+.App .ButtonWrap {
+  padding: 10px 15px;
+  border-bottom: 1px solid #e6e6e6;
+}
+
+.App .ButtonWrap button {
+  padding: 3px 7px;
+  color: #777;
+  background: none;
+  border: none;
+  font-size: 16px;
+  cursor: pointer;
 }
 
 .App ul {
