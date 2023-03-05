@@ -1,4 +1,5 @@
 import { useState, useEffect } from 'react';
+import styled from 'styled-components'
 import TodoForm from './components/TodoForm';
 import TodoItem from './components/TodoItem';
 import './App.css';
@@ -59,17 +60,60 @@ function App() {
   
   const sortedTodos = getSortedTodos();
 
+  const App = styled.div`
+    max-width: 800px;
+    margin: 0 auto;
+    padding: 0px;
+    text-align: center;
+  `
+
+  const Wrapper = styled.div`
+    box-shadow: 0 2px 4px 0 rgb(0 0 0 / 20%), 0 25px 50px 0 rgb(0 0 0 / 10%);
+    padding-top: 10px;
+  `
+
+  const Title = styled.h1`
+    font-size: 50px;
+    margin: 0 0 20px;
+    color: #af2f2f26;
+  `
+
+  const ButtonWraper = styled.div`
+    padding: 10px 15px;
+    border-bottom: 1px solid #e6e6e6;
+  `
+
+  const Button = styled.button`
+    padding: 3px 7px;
+    color: #777;
+    background: none;
+    border: none;
+    font-size: 16px;
+    cursor: pointer;
+  `
+
+  const TodoItemWraper = styled.ul`
+    padding: 0;
+  `
+
+  const Announcement = styled.p`
+    font-size: 14px;
+    color: #777;
+    padding: 0 20px;
+    text-align: left;
+  `
+
   return (
-    <div className='App'>
-      <div className="TodoWrap">
-        <h1>Todos</h1>
+    <App>
+      <Wrapper>
+        <Title>Todos</Title>
         <TodoForm onAddTodo={handleAddTodo} />
-        <div className='ButtonWrap'>
-          <button onClick={() => setFilter('all')}>All</button>
-          <button onClick={() => setFilter('active')}>Active</button>
-          <button onClick={() => setFilter('completed')}>Completed</button>
-        </div>
-        <ul>
+        <ButtonWraper>
+          <Button onClick={() => setFilter('all')}>All</Button>
+          <Button onClick={() => setFilter('active')}>Active</Button>
+          <Button onClick={() => setFilter('completed')}>Completed</Button>
+        </ButtonWraper>
+        <TodoItemWraper>
           {sortedTodos.map((todo) => (
             <TodoItem 
               key={todo.id} 
@@ -79,10 +123,10 @@ function App() {
               onDeleteTodo={handleDeleteTodo} 
             />
           ))}
-        </ul>
-      </div>
-      <p className="explain">* 텍스트를 선택하면 수정이 가능합니다</p>
-    </div>
+        </TodoItemWraper>
+      </Wrapper>
+      <Announcement>* 텍스트를 선택하면 수정이 가능합니다</Announcement>
+    </App>
   );
 }
 
