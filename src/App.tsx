@@ -2,7 +2,6 @@ import { useState, useEffect } from 'react';
 import styled from 'styled-components'
 import TodoForm from './components/TodoForm';
 import TodoItem from './components/TodoItem';
-import './App.css';
 
 export type TodoProps = {
   text: string
@@ -60,7 +59,34 @@ function App() {
   
   const sortedTodos = getSortedTodos();
 
-  const App = styled.div`
+  return (
+    <AppWrapper>
+      <Wrapper>
+        <Title>Todos</Title>
+        <TodoForm onAddTodo={handleAddTodo} />
+        <ButtonWrap>
+          <Button onClick={() => setFilter('all')}>All</Button>
+          <Button onClick={() => setFilter('active')}>Active</Button>
+          <Button onClick={() => setFilter('completed')}>Completed</Button>
+        </ButtonWrap>
+        <TodoItemWrap>
+          {sortedTodos.map((todo) => (
+            <TodoItem 
+              key={todo.id} 
+              todo={todo} 
+              onToggleTodo={handleToggleTodo} 
+              onUpdateTodo={handleUpdateTodo} 
+              onDeleteTodo={handleDeleteTodo} 
+            />
+          ))}
+        </TodoItemWrap>
+      </Wrapper>
+      <Announcement>* 텍스트를 선택하면 수정이 가능합니다</Announcement>
+    </AppWrapper>
+  );
+}
+
+const AppWrapper = styled.div`
     max-width: 800px;
     margin: 0 auto;
     padding: 0px;
@@ -78,7 +104,7 @@ function App() {
     color: #af2f2f26;
   `
 
-  const ButtonWraper = styled.div`
+  const ButtonWrap = styled.div`
     padding: 10px 15px;
     border-bottom: 1px solid #e6e6e6;
   `
@@ -92,7 +118,7 @@ function App() {
     cursor: pointer;
   `
 
-  const TodoItemWraper = styled.ul`
+  const TodoItemWrap = styled.ul`
     padding: 0;
   `
 
@@ -102,32 +128,5 @@ function App() {
     padding: 0 20px;
     text-align: left;
   `
-
-  return (
-    <App>
-      <Wrapper>
-        <Title>Todos</Title>
-        <TodoForm onAddTodo={handleAddTodo} />
-        <ButtonWraper>
-          <Button onClick={() => setFilter('all')}>All</Button>
-          <Button onClick={() => setFilter('active')}>Active</Button>
-          <Button onClick={() => setFilter('completed')}>Completed</Button>
-        </ButtonWraper>
-        <TodoItemWraper>
-          {sortedTodos.map((todo) => (
-            <TodoItem 
-              key={todo.id} 
-              todo={todo} 
-              onToggleTodo={handleToggleTodo} 
-              onUpdateTodo={handleUpdateTodo} 
-              onDeleteTodo={handleDeleteTodo} 
-            />
-          ))}
-        </TodoItemWraper>
-      </Wrapper>
-      <Announcement>* 텍스트를 선택하면 수정이 가능합니다</Announcement>
-    </App>
-  );
-}
 
 export default App;
