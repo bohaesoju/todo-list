@@ -60,14 +60,14 @@ function App() {
   const sortedTodos = getSortedTodos();
 
   return (
-    <AppWrapper>
-      <Wrapper>
+    <Root>
+      <Body>
         <Title>Todos</Title>
         <TodoForm onAddTodo={handleAddTodo} />
         <ButtonWrap>
-          <Button onClick={() => setFilter('all')}>All</Button>
-          <Button onClick={() => setFilter('active')}>Active</Button>
-          <Button onClick={() => setFilter('completed')}>Completed</Button>
+          <Button selected={filter === 'all'} onClick={() => setFilter('all')}>All</Button>
+          <Button selected={filter === 'active'} onClick={() => setFilter('active')}>Active</Button>
+          <Button selected={filter === 'completed'} onClick={() => setFilter('completed')}>Completed</Button>
         </ButtonWrap>
         <TodoItemWrap>
           {sortedTodos.map((todo) => (
@@ -80,20 +80,20 @@ function App() {
             />
           ))}
         </TodoItemWrap>
-      </Wrapper>
+      </Body>
       <Announcement>* 텍스트를 선택하면 수정이 가능합니다</Announcement>
-    </AppWrapper>
+    </Root>
   );
 }
 
-const AppWrapper = styled.div`
+const Root = styled.div`
     max-width: 800px;
     margin: 0 auto;
     padding: 0px;
     text-align: center;
   `
 
-  const Wrapper = styled.div`
+  const Body = styled.div`
     box-shadow: 0 2px 4px 0 rgb(0 0 0 / 20%), 0 25px 50px 0 rgb(0 0 0 / 10%);
     padding-top: 10px;
   `
@@ -101,7 +101,7 @@ const AppWrapper = styled.div`
   const Title = styled.h1`
     font-size: 50px;
     margin: 0 0 20px;
-    color: #af2f2f26;
+    color: rgba(175, 47, 47, 0.45);
   `
 
   const ButtonWrap = styled.div`
@@ -109,12 +109,14 @@ const AppWrapper = styled.div`
     border-bottom: 1px solid #e6e6e6;
   `
 
-  const Button = styled.button`
+  const Button = styled.button<{ selected: boolean }>`
     padding: 3px 7px;
     color: #777;
     background: none;
-    border: none;
+    border: ${props => props.selected ? "1px solid rgba(175, 47, 47, 0.4)" : "none"};
+    border-radius: 3px;
     font-size: 16px;
+    margin-right: 5px;
     cursor: pointer;
   `
 

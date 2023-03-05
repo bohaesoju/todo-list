@@ -22,6 +22,11 @@ function TodoItem({ todo, onToggleTodo, onUpdateTodo, onDeleteTodo }: TodoItemPr
     onUpdateTodo(todo.id, updatedTodo);
   };
 
+  const handleUpdateTodoSubmit = (event: React.FormEvent<HTMLFormElement>) => {
+    event.preventDefault();
+    (document.activeElement as HTMLElement).blur()
+  };
+
   const getKoreaStandardTime = (timeStamp: number): string => {
     const KoreaStandardTimeOffset = 9 * 60 * 60 * 1000;
     const KoreaStandardTimeStamp = new Date(timeStamp + KoreaStandardTimeOffset);
@@ -41,7 +46,9 @@ function TodoItem({ todo, onToggleTodo, onUpdateTodo, onDeleteTodo }: TodoItemPr
         checked={todo.completed}
         onChange={handleToggleChange}
       />
-      <TodoText type="text" onChange={handleUpdateTodoChange} value={todo.text} />
+      <form onSubmit={handleUpdateTodoSubmit}>
+        <TodoText type="text" onChange={handleUpdateTodoChange} value={todo.text} />
+      </form>
       <TodoDate>{getKoreaStandardTime(todo.id)}</TodoDate>
       <DeleteButton className='Trash' onClick={handleDeleteTodoClick}></DeleteButton>
     </TodoItemList>
