@@ -1,7 +1,6 @@
 import { useState } from 'react';
 import { TodoProps } from '../App';
 import styled from 'styled-components'
-// import crypto from "crypto-js";
 
 interface TodoFormProps {
 	onAddTodo: (todo: TodoProps) => void
@@ -16,7 +15,6 @@ function TodoForm({ onAddTodo }: TodoFormProps) {
 
   const handleAddTodoSubmit = (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
-    // const encryptTodoText = crypto.AES.encrypt(JSON.stringify(newTodo), "todo-list-secret-key").toString()
     if (newTodo.trim() !== '') {
       const todo = {
         text: newTodo,

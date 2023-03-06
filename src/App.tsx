@@ -1,4 +1,5 @@
 import { useState, useEffect } from 'react';
+import crypto from "crypto-js";
 import styled from 'styled-components'
 import TodoForm from './components/TodoForm';
 import TodoItem from './components/TodoItem';
@@ -11,6 +12,7 @@ export type TodoProps = {
 
 function App() {
   const storedTodos: TodoProps[] = JSON.parse(localStorage.getItem('todos') || '[]');
+  const todoListEncryptKey = "todo-list-encrypt-key";
   const [todos, setTodos] = useState(storedTodos);
   const [filter, setFilter] = useState('all');
 
@@ -30,16 +32,26 @@ function App() {
   };
 
   const handleToggleTodo = (id: number) => {
-    setTodos(
-      todos.map((todo: TodoProps) => {
-        if (todo.id === id) return { ...todo, completed: !todo.completed };
-        return todo;
-      })
-    );
+    const newToggleTodos = todos.map((todo: TodoProps) => {
+      if (todo.id === id) return { ...todo, completed: !todo.completed };
+      return todo;
+    })
+    setTodos(newToggleTodos);
   };
 
   const handleDeleteTodo = (id: number) => {
     setTodos(todos.filter((todo: TodoProps) => todo.id !== id));
+  };
+
+  const handleSaveTodo = () => {
+    const newTodos = [...todos]
+    const encryptTodos = newTodos.map((todo) => {
+      return {
+        ...todo,
+        text: crypto.AES.encrypt(todo.text, todoListEncryptKey).toString()
+      };
+    });
+    console.log('encryptTodos', encryptTodos)
   };
 
   const filteredTodos = todos.filter((todo: TodoProps) => {
@@ -82,6 +94,7 @@ function App() {
         </TodoItemWrap>
       </Body>
       <Announcement>* 텍스트를 선택하면 수정이 가능합니다</Announcement>
+      <SaveButton onClick={handleSaveTodo}>저장</SaveButton>
     </Root>
   );
 }
@@ -89,7 +102,7 @@ function App() {
 const Root = styled.div`
     max-width: 800px;
     margin: 0 auto;
-    padding: 0px;
+    padding: 0px 0px 20px;
     text-align: center;
   `
 
@@ -114,6 +127,16 @@ const Root = styled.div`
     color: #777;
     background: none;
     border: ${props => props.selected ? "1px solid rgba(175, 47, 47, 0.4)" : "none"};
+    border-radius: 3px;
+    font-size: 16px;
+    margin-right: 5px;
+    cursor: pointer;
+  `
+  
+  const SaveButton = styled.button`
+    padding: 6px 10px;
+    color: black;
+    background: white;
     border-radius: 3px;
     font-size: 16px;
     margin-right: 5px;
