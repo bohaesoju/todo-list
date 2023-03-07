@@ -7,40 +7,42 @@ import TodoItem from './components/TodoItem';
 export type TodoProps = {
   text: string
   completed: boolean;
-  id: number;
+  date: number;
 }
 
+const ENCRYPT_TODO_KEY = "encrypt-todo-key";
+const LOCAL_STORAGE_TODO_KEY = "local-storage-todo-key";
+
 function App() {
-  const storedTodos: TodoProps[] = JSON.parse(localStorage.getItem('todos') || '[]');
-  const todoListEncryptKey = "todo-list-encrypt-key";
+  const storedTodos: TodoProps[] = JSON.parse(localStorage.getItem(LOCAL_STORAGE_TODO_KEY) || '[]');
   const [todos, setTodos] = useState(storedTodos);
   const [filter, setFilter] = useState('all');
 
   useEffect(() => {
-    localStorage.setItem('todos', JSON.stringify(todos));
+    localStorage.setItem(LOCAL_STORAGE_TODO_KEY, JSON.stringify(todos));
   }, [todos]);
 
   const handleAddTodo = (todo: TodoProps): void => {
     setTodos([...todos, todo]);
   };
 
-  const handleUpdateTodo = (id: number, updatedTodo: TodoProps) => {
+  const handleUpdateTodo = (date: number, updatedTodo: TodoProps) => {
     const newTodos = [...todos];
-    const index = newTodos.findIndex((todo) => todo.id === id);
+    const index = newTodos.findIndex((todo) => todo.date === date);
     newTodos[index] = updatedTodo;
     setTodos(newTodos);
   };
 
-  const handleToggleTodo = (id: number) => {
+  const handleToggleTodo = (date: number) => {
     const newToggleTodos = todos.map((todo: TodoProps) => {
-      if (todo.id === id) return { ...todo, completed: !todo.completed };
+      if (todo.date === date) return { ...todo, completed: !todo.completed };
       return todo;
     })
     setTodos(newToggleTodos);
   };
 
-  const handleDeleteTodo = (id: number) => {
-    setTodos(todos.filter((todo: TodoProps) => todo.id !== id));
+  const handleDeleteTodo = (date: number) => {
+    setTodos(todos.filter((todo: TodoProps) => todo.date !== date));
   };
 
   const handleSaveTodo = () => {
@@ -48,24 +50,27 @@ function App() {
     const encryptTodos = newTodos.map((todo) => {
       return {
         ...todo,
-        text: crypto.AES.encrypt(todo.text, todoListEncryptKey).toString()
+        text: crypto.AES.encrypt(todo.text, ENCRYPT_TODO_KEY).toString()
       };
     });
     console.log('encryptTodos', encryptTodos)
   };
 
-  const filteredTodos = todos.filter((todo: TodoProps) => {
-    if (filter === 'all') return true;
-    if (filter === 'completed') return todo.completed;
-    if (filter === 'active') return !todo.completed;
-    return false;
-  });
+  const getFilteredTodos = () => {
+    return todos.filter((todo: TodoProps) => {
+      if (filter === 'all') return true;
+      if (filter === 'completed') return todo.completed;
+      if (filter === 'active') return !todo.completed;
+      return false;
+    })
+  }
 
   const getSortedTodos = () => {
-    const newFilteredTodos = [...filteredTodos]
-    return newFilteredTodos.sort((a, b) => {
+    const filteredTodos = getFilteredTodos()
+    return filteredTodos.sort((a, b) => {
+      console.log('a, b', a, b)
       if (a.completed !== b.completed) return a.completed ? 1 : -1;
-      return b.id - a.id;
+      return b.date - a.date;
     })
   }
   
@@ -77,14 +82,14 @@ function App() {
         <Title>Todos</Title>
         <TodoForm onAddTodo={handleAddTodo} />
         <ButtonWrap>
-          <Button selected={filter === 'all'} onClick={() => setFilter('all')}>All</Button>
-          <Button selected={filter === 'active'} onClick={() => setFilter('active')}>Active</Button>
-          <Button selected={filter === 'completed'} onClick={() => setFilter('completed')}>Completed</Button>
+          <Button onClick={() => setFilter('all')} selected={filter === 'all'}>All</Button>
+          <Button onClick={() => setFilter('active')} selected={filter === 'active'}>Active</Button>
+          <Button onClick={() => setFilter('completed')} selected={filter === 'completed'}>Completed</Button>
         </ButtonWrap>
         <TodoItemWrap>
           {sortedTodos.map((todo) => (
             <TodoItem 
-              key={todo.id} 
+              key={todo.date} 
               todo={todo} 
               onToggleTodo={handleToggleTodo} 
               onUpdateTodo={handleUpdateTodo} 
@@ -94,7 +99,7 @@ function App() {
         </TodoItemWrap>
       </Body>
       <Announcement>* 텍스트를 선택하면 수정이 가능합니다</Announcement>
-      <SaveButton onClick={handleSaveTodo}>저장</SaveButton>
+      <SaveTodoButton onClick={handleSaveTodo}>저장</SaveTodoButton>
     </Root>
   );
 }
@@ -133,7 +138,7 @@ const Root = styled.div`
     cursor: pointer;
   `
   
-  const SaveButton = styled.button`
+  const SaveTodoButton = styled.button`
     padding: 6px 10px;
     color: black;
     background: white;

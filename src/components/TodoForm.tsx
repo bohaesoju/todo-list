@@ -19,7 +19,7 @@ function TodoForm({ onAddTodo }: TodoFormProps) {
       const todo = {
         text: newTodo,
         completed: false, 
-        id: Date.now()
+        date: Date.now()
       };
       onAddTodo(todo);
       setNewTodo('');

@@ -3,23 +3,23 @@ import styled from 'styled-components'
 
 interface TodoItemProps {
   todo: TodoProps
-  onToggleTodo: (id: number) => void
-  onUpdateTodo: (id: number, todo: TodoProps) => void
-  onDeleteTodo: (id: number) => void
+  onToggleTodo: (date: number) => void
+  onUpdateTodo: (date: number, todo: TodoProps) => void
+  onDeleteTodo: (date: number) => void
 }
 
 function TodoItem({ todo, onToggleTodo, onUpdateTodo, onDeleteTodo }: TodoItemProps) {
   const handleDeleteTodoClick = () => {
-    onDeleteTodo(todo.id);
+    onDeleteTodo(todo.date);
   };
 
   const handleToggleChange = () => {
-    onToggleTodo(todo.id)
+    onToggleTodo(todo.date)
   };
 
   const handleUpdateTodoChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const updatedTodo = { ...todo, text: event.target.value };
-    onUpdateTodo(todo.id, updatedTodo);
+    onUpdateTodo(todo.date, updatedTodo);
   };
 
   const handleUpdateTodoSubmit = (event: React.FormEvent<HTMLFormElement>) => {
@@ -40,29 +40,28 @@ function TodoItem({ todo, onToggleTodo, onUpdateTodo, onDeleteTodo }: TodoItemPr
   }
 
   return (
-    <TodoItemList completed={todo.completed}>
+    <TodoItemList>
       <CheckBox
         type="checkbox"
         checked={todo.completed}
         onChange={handleToggleChange}
       />
       <form onSubmit={handleUpdateTodoSubmit}>
-        <TodoText type="text" onChange={handleUpdateTodoChange} value={todo.text} />
+        <TodoText type="text" onChange={handleUpdateTodoChange} value={todo.text} completed={todo.completed} />
       </form>
-      <TodoDate>{getKoreaStandardTime(todo.id)}</TodoDate>
+      <TodoDate completed={todo.completed}>{getKoreaStandardTime(todo.date)}</TodoDate>
       <DeleteButton className='Trash' onClick={handleDeleteTodoClick}></DeleteButton>
     </TodoItemList>
   );
 }
 
-const TodoItemList = styled.li<{ completed: boolean }>`
+const TodoItemList = styled.li`
     display: flex;
     justify-content: space-between;
     align-items: center;
     padding: 10px;
     border-radius: 5px;
     border-bottom: 1px solid #ededed;
-    text-decoration: ${(props) => (props.completed ? "line-through" : "")};
   `
 
   const CheckBox = styled.input`
@@ -72,7 +71,6 @@ const TodoItemList = styled.li<{ completed: boolean }>`
     border: 1px solid rgb(206, 212, 218);
     -webkit-appearance: none;
     appearance: none;
-    margin: 0;
     width: 1.15em;
     height: 1.15em;
     border: 0.15em solid currentColor;
@@ -80,7 +78,7 @@ const TodoItemList = styled.li<{ completed: boolean }>`
     transform: translateY(-0.075em);
     display: grid;
     place-content: center;
-    margin-right: 10px;
+    cursor: pointer;
     &:focus {
       outline: max(2px, 0.15em) solid currentColor;
       outline-offset: max(2px, 0.15em);
@@ -103,17 +101,19 @@ const TodoItemList = styled.li<{ completed: boolean }>`
     }
   `
 
-  const TodoText = styled.input`
+  const TodoText = styled.input<{ completed: boolean }>`
     border: none;
     background: transparent;
     padding: 10px 0;
     font-size: 16px;
+    text-decoration: ${(props) => (props.completed ? "line-through" : "")};
   `
 
-  const TodoDate = styled.span`
+  const TodoDate = styled.span<{ completed: boolean }>`
     font-size: 14px;
     letter-spacing: -1px;
     padding-right: 5px;
+    text-decoration: ${(props) => (props.completed ? "line-through" : "")};
   `
 
   const DeleteButton = styled.button`
